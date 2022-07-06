@@ -15,19 +15,25 @@ public class Person {
         this.surname = surname;
     }
 
-    public Person(PersonBuilder personBuilder) {
-        if (personBuilder == null) {
-            throw new IllegalArgumentException("Не удалось создать объект");
-        }
-        this.name = personBuilder.name;
-        this.surname = personBuilder.surname;
-        if (personBuilder.hasAge()) {
-            this.age = personBuilder.age;
-        }
-        if (personBuilder.hasAddress()) {
-            this.address = personBuilder.address;
-        }
+    public Person(String name, String surname, int age) {
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+    }
 
+    public Person(String name, String surname, int age, String address) {
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
+        this.address = address;
+    }
+
+    public boolean hasAge() {
+        return this.age >= 0;
+    }
+
+    public boolean hasAddress() {
+        return this.address != null;
     }
 
     public String getName() {
@@ -39,10 +45,7 @@ public class Person {
     }
 
     public OptionalInt getAge() {
-        if (this.age < 0) {
-            return OptionalInt.empty();
-        }
-        return OptionalInt.of(this.age);
+        return OptionalInt.of(age);
     }
 
     public String getAddress() {
@@ -57,19 +60,30 @@ public class Person {
         this.age++;
     }
 
-    public PersonBuilder newChildBuilder() {
-        return new PersonBuilder()
-                .setSurname(this.surname)
-                .setAddress(this.address);
-    }
-
     @Override
     public String toString() {
         return name + " " + surname + ": age = " + age + "; address = " + address;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, surname);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        Person person = (Person) o;
+        return age == person.age && Objects.equals(name, person.name)
+                && Objects.equals(surname, person.surname)
+                && Objects.equals(address, person.address);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname, age, address);
+    }
+
+    public PersonBuilder newChildBuilder() {
+        return new PersonBuilder()
+                .setSurname(this.surname)
+                .setAddress(this.address);
+    }
+
 }

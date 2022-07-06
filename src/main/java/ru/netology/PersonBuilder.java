@@ -2,10 +2,10 @@ package ru.netology;
 
 public class PersonBuilder implements IPersonBuilder {
 
-    protected String name;
-    protected String surname;
-    protected int age;
-    protected String address;
+    private String name;
+    private String surname;
+    private int age;
+    private String address;
 
 
     public PersonBuilder setName(String name) {
@@ -40,19 +40,12 @@ public class PersonBuilder implements IPersonBuilder {
         return this;
     }
 
-    public boolean hasAge() {
-        return this.age != -1;
-    }
-
-    public boolean hasAddress() {
-        return this.address != null;
-    }
-
     @Override
     public Person build() {
-        if (this.name == null || name.trim().isEmpty() || this.surname == null || surname.trim().isEmpty()) {
+        if (name == null || surname == null) {
             throw new IllegalStateException("Ошибка. Имя и фамилия должны быть заполнены!");
         }
-        return new Person(this);
+        return new Person(name, surname, age, address);
     }
+
 }
